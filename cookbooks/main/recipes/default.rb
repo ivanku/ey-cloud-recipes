@@ -49,7 +49,7 @@
 #require_recipe "logrotate"
 #
 #uncomment to use the solr recipe
-#require_recipe "solr"
+require_recipe "solr"
 
 #uncomment to include the emacs recipe
 #require_recipe "emacs"

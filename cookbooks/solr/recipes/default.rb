@@ -3,17 +3,9 @@
 # Recipe:: default
 #
 # We specify what version we want below.
-solr_desiredversion = 1.4
-if ['solo', 'util'].include?(node[:instance_role])
-  if solr_desiredversion == 1.3
-    solr_file = "apache-solr-1.3.0.tgz"
-    solr_dir = "apache-solr-1.3.0"
-    solr_url = "http://mirror.its.uidaho.edu/pub/apache/lucene/solr/1.3.0/apache-solr-1.3.0.tgz"
-  else
-    solr_dir = "apache-solr-1.4.1"
-    solr_file = "apache-solr-1.4.1.tgz"
-    solr_url = "http://mirror.candidhosting.com/pub/apache//lucene/solr/1.4.1/apache-solr-1.4.1.tgz"
-  end
+  solr_dir = "apache-solr-3.6.0"
+  solr_file = "apache-solr-3.6.0.tgz"
+  solr_url = "http://mirror.candidhosting.com/pub/apache/lucene/solr/3.6.0/apache-solr-3.6.0.tgz"
 
   directory "/var/run/solr" do
     action :create
@@ -77,6 +69,15 @@ if ['solo', 'util'].include?(node[:instance_role])
     mode 0755
   end
 
+  remote_file "/data/#{solr_dir}/schema.xml" do 
+    owner node[:owner_name]
+    group node[:owner_name] 
+    mode 0755 
+    source "schema.xml" 
+    backup false 
+    action :create 
+  end   
+
    execute "chown_solr" do
      command "chown #{node[:owner_name]}:#{node[:owner_name]} -R /data/solr"
    end
@@ -88,4 +89,3 @@ if ['solo', 'util'].include?(node[:instance_role])
    execute "start-solr" do
      command "sleep 3 && monit start solr_9080"
    end
-end
